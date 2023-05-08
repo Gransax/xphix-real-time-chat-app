@@ -1,5 +1,7 @@
 "use client";
 
+import { signIn } from "next-auth/react";
+import axios from "axios";
 import React, { useCallback, useState } from "react";
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,6 +10,7 @@ import Input from "../../components/inputs/Input";
 import Button from "../../components/Button";
 import AuthSocialButton from "./AuthSocialButton";
 import { BsGithub, BsGoogle } from "react-icons/bs";
+import toast from "react-hot-toast";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -55,10 +58,34 @@ const AuthForm = (props: Props) => {
     setIsLoading(true);
 
     if (variant === "REGISTER") {
-      // Axios register
+      axios
+        .post("/api/register", data)
+        .then((response) => {
+          toast.success("Successfully registered!");
+        })
+        .catch((error) => {
+          console.log("Auth error", error?.message);
+          toast.error("Something went wrong!");
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
     if (variant === "LOGIN") {
-      // nextAuth signIn
+      signIn("credentials", {
+        ...data,
+        redirect: false,
+      })
+        .then((callback) => {
+          if (callback?.error) {
+            toast.error("invalid credentials");
+          }
+
+          if (callback?.ok && !callback?.error) {
+            toast.success("Successfully logged in");
+          }
+        })
+        .finally(() => setIsLoading(false));
     }
   };
 
