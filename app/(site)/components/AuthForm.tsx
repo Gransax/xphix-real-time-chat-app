@@ -1,8 +1,8 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import axios from "axios";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -11,6 +11,7 @@ import Button from "../../components/Button";
 import AuthSocialButton from "./AuthSocialButton";
 import { BsGithub, BsGoogle } from "react-icons/bs";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -31,8 +32,16 @@ const loginValidationSchema = Yup.object().shape({
 });
 
 const AuthForm = (props: Props) => {
+  const session = useSession();
+  const router = useRouter();
   const [variant, setVariant] = useState<Variant>("REGISTER");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (session?.status === "authenticated") {
+      router.push("/users");
+    }
+  }, [session?.status]);
 
   const toggleVariant = useCallback(() => {
     setVariant((value: Variant) => (value === "LOGIN" ? "REGISTER" : "LOGIN"));
@@ -62,6 +71,18 @@ const AuthForm = (props: Props) => {
         .post("/api/register", data)
         .then((response) => {
           toast.success("Successfully registered!");
+          signIn("credentials", { ...data, redirect: false }).then(
+            (callback) => {
+              if (callback?.error) {
+                toast.error("invalid credentials");
+              }
+
+              if (callback?.ok && !callback?.error) {
+                toast.success("Successfully logged in");
+                router.push("/users");
+              }
+            }
+          );
         })
         .catch((error) => {
           console.log("Auth error", error?.message);
@@ -83,6 +104,7 @@ const AuthForm = (props: Props) => {
 
           if (callback?.ok && !callback?.error) {
             toast.success("Successfully logged in");
+            router.push("/users");
           }
         })
         .finally(() => setIsLoading(false));
@@ -91,7 +113,17 @@ const AuthForm = (props: Props) => {
 
   const socialAction = (action: string) => {
     setIsLoading(true);
-    //NextAuth social singIn
+    signIn(action, { redirect: false })
+      .then((callback) => {
+        if (callback?.error) {
+          toast.error("invalid credentials");
+        }
+
+        if (callback?.ok && !callback?.error) {
+          toast.success("Successfully logged in");
+        }
+      })
+      .finally(() => setIsLoading(false));
   };
   return (
     <div

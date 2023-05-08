@@ -1,8 +1,9 @@
+import AuthContext from "./context/AuthContext";
 import ToasterContext from "./context/ToasterContext";
 import "./globals.css";
-import { Inter, Nunito } from "next/font/google";
+import { Nunito } from "next/font/google";
 
-const inter = Nunito({ subsets: ["latin"] });
+const mainFont = Nunito({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Real-time chat application",
@@ -16,9 +17,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <ToasterContext />
-        {children}
+      <body className={mainFont.className}>
+        <AuthContext>
+          <ToasterContext />
+          {children}
+        </AuthContext>
       </body>
     </html>
   );
