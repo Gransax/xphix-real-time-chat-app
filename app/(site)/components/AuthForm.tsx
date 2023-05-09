@@ -34,7 +34,7 @@ const loginValidationSchema = Yup.object().shape({
 const AuthForm = (props: Props) => {
   const session = useSession();
   const router = useRouter();
-  const [variant, setVariant] = useState<Variant>("REGISTER");
+  const [variant, setVariant] = useState<Variant>("LOGIN");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {

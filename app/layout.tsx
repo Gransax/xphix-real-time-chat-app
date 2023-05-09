@@ -7,7 +7,7 @@ const mainFont = Nunito({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Real-time chat application",
-  description: "An awesome real*time chat application in nextJs",
+  description: "An awesome real-time chat application in nextJs",
 };
 
 export default function RootLayout({
