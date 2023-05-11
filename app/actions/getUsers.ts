@@ -5,7 +5,6 @@ export default async function getUsers() {
   const session = await getSession();
 
   if (!session?.user?.email) {
-    console.log("Error : no email address");
     return [];
   }
 
@@ -15,10 +14,8 @@ export default async function getUsers() {
         NOT: { email: session.user.email },
       },
     });
-    console.log("users :", users);
     return users;
   } catch (error: any) {
-    console.log("Error : ", error?.message);
     return [];
   }
 }

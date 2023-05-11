@@ -41,7 +41,7 @@ const AuthForm = (props: Props) => {
     if (session?.status === "authenticated") {
       router.push("/users");
     }
-  }, [session?.status]);
+  }, [router, session?.status]);
 
   const toggleVariant = useCallback(() => {
     setVariant((value: Variant) => (value === "LOGIN" ? "REGISTER" : "LOGIN"));
@@ -85,7 +85,6 @@ const AuthForm = (props: Props) => {
           );
         })
         .catch((error) => {
-          console.log("Auth error", error?.message);
           toast.error("Something went wrong!");
         })
         .finally(() => {
