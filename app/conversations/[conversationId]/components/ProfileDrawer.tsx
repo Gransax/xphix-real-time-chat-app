@@ -1,13 +1,13 @@
 "use client";
 
 import Avatar from "@/app/components/Avatar";
-import Modal from "@/app/components/Modal";
 import useOtherUser from "@/app/hooks/useOtherUsers";
 import { Transition, Dialog } from "@headlessui/react";
 import { Conversation, User } from "@prisma/client";
 import { format } from "date-fns";
 import React, { Fragment, useMemo, useState } from "react";
 import { IoClose, IoTrash } from "react-icons/io5";
+import ConfirmModal from "./ConfirmModal";
 type Props = {
   conversation: Conversation & {
     users: User[];
@@ -19,7 +19,7 @@ type Props = {
 const ProfileDrawer = ({ conversation, isOpen, onClose }: Props) => {
   const otherUser = useOtherUser(conversation);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   const joinedDate = useMemo(() => {
     return format(new Date(otherUser.createdAt), "PP");
@@ -38,16 +38,12 @@ const ProfileDrawer = ({ conversation, isOpen, onClose }: Props) => {
 
   return (
     <>
-      <Modal
-        isOpen={isModalOpen}
+      <ConfirmModal
+        isOpen={isConfirmModalOpen}
         onClose={() => {
-          setIsModalOpen(false);
+          setIsConfirmModalOpen(false);
         }}
-      >
-        <div className="bg-white p-5">
-          <p>Hello world!</p>
-        </div>
-      </Modal>
+      />
       <Transition.Root show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-50" onClose={onClose}>
           <Transition.Child
@@ -166,7 +162,7 @@ const ProfileDrawer = ({ conversation, isOpen, onClose }: Props) => {
                           </div>
                           <div className="flex gap-10 my-8">
                             <div
-                              onClick={() => setIsModalOpen(true)}
+                              onClick={() => setIsConfirmModalOpen(true)}
                               className="
                               flex
                               flex-col

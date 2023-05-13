@@ -5,6 +5,7 @@ import { useState } from "react";
 import DesktopItem from "./DesktopItem";
 import { User } from "@prisma/client";
 import Avatar from "../Avatar";
+import SettingsModal from "./SettingsModal";
 
 type Props = {
   currentUser?: User;
@@ -15,8 +16,14 @@ const DesktopSidebar = ({ currentUser }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div
-      className="
+    <>
+      <SettingsModal
+        isOpen={isOpen}
+        currentUser={currentUser}
+        onClose={() => setIsOpen(false)}
+      />
+      <div
+        className="
         hidden
         lg:fixed
         lg:inset-y-0
@@ -32,57 +39,58 @@ const DesktopSidebar = ({ currentUser }: Props) => {
         lg:flex-col
         justify-between
     "
-    >
-      <nav
-        className="
+      >
+        <nav
+          className="
             mt-4
             flex
             flex-col
             justify-between
         "
-      >
-        <ul
-          role="list"
-          className="
+        >
+          <ul
+            role="list"
+            className="
             flex 
             flex-col
             items-center
             space-y-1
             "
-        >
-          {routes.map(({ label, href, icon, onClick, active }) => (
-            <DesktopItem
-              key={label}
-              label={label}
-              href={href}
-              icon={icon}
-              active={active}
-              onClick={onClick}
-            />
-          ))}
-        </ul>
-      </nav>
-      <nav
-        className="
+          >
+            {routes.map(({ label, href, icon, onClick, active }) => (
+              <DesktopItem
+                key={label}
+                label={label}
+                href={href}
+                icon={icon}
+                active={active}
+                onClick={onClick}
+              />
+            ))}
+          </ul>
+        </nav>
+        <nav
+          className="
           mt-4
           flex
           flex-col
           justify-between
           items-center
         "
-      >
-        <div
-          onClick={() => setIsOpen(true)}
-          className="
+        >
+          <div
+            onClick={() => setIsOpen(true)}
+            className="
             cursor-pointer
             hover:opacity-75
-            transition
+            transition  
           "
-        >
-          <Avatar user={currentUser!} />
-        </div>
-      </nav>
-    </div>
+          >
+            <Avatar user={currentUser!} />
+          </div>
+        </nav>
+      </div>
+    </>
   );
 };
 
