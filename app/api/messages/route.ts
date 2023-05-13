@@ -14,6 +14,8 @@ export async function POST(request: Request) {
 
     const { message, image, conversationId } = body;
 
+    console.log("message : ", message);
+
     const newMessage = await prisma.message.create({
       data: {
         image: image,

@@ -9,6 +9,7 @@ import { HiPhoto } from "react-icons/hi2";
 import * as Yup from "yup";
 import MessageInput from "./MessageInput";
 import { HiPaperAirplane } from "react-icons/hi2";
+import { CldUploadButton } from "next-cloudinary";
 
 const validationSchema = Yup.object().shape({
   message: Yup.string().optional(),
@@ -31,9 +32,16 @@ const ConversationForm = (props: Props) => {
   });
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    setValue("message", "", { shouldValidate: true });
     axios.post("/api/messages", {
       ...data,
+      conversationId: conversationId,
+    });
+    setValue("message", "", { shouldValidate: true });
+  };
+
+  const handleUpload = (result: any) => {
+    axios.post("/api/messages", {
+      image: result?.info?.secure_url,
       conversationId: conversationId,
     });
   };
@@ -51,7 +59,13 @@ const ConversationForm = (props: Props) => {
       w-full
         "
     >
-      <HiPhoto size={30} className="text-sky-500" />
+      <CldUploadButton
+        options={{ maxFiles: 1 }}
+        onUpload={handleUpload}
+        uploadPreset="icpgvd2h"
+      >
+        <HiPhoto size={30} className="text-sky-500" />
+      </CldUploadButton>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex items-center gap-2 lg:gap-4 w-full"
