@@ -1,3 +1,4 @@
+"use client";
 import { FullConversationType } from "@/app/types";
 import { useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";

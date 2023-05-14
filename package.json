@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.194",
+    "encoding": "^0.1.13",
     "prisma": "^4.13.0"
   }
 }

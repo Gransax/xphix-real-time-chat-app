@@ -1,3 +1,4 @@
+"use client";
 import React, { useCallback, useState } from "react";
 import Modal from "@/app/components/Modal";
 import { useRouter } from "next/navigation";
