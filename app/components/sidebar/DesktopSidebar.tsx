@@ -86,7 +86,7 @@ const DesktopSidebar = ({ currentUser }: Props) => {
             transition  
           "
           >
-            <Avatar user={currentUser!} />
+            <Avatar user={currentUser} />
           </div>
         </nav>
       </div>

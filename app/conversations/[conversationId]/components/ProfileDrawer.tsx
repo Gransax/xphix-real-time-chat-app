@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import React, { Fragment, useMemo, useState } from "react";
 import { IoClose, IoTrash } from "react-icons/io5";
 import ConfirmModal from "./ConfirmModal";
+import AvatarGroup from "@/app/components/AvatarGroup";
 type Props = {
   conversation: Conversation & {
     users: User[];
@@ -89,7 +90,7 @@ const ProfileDrawer = ({ conversation, isOpen, onClose }: Props) => {
                     pointer-events-auto
                     w-screen
                     max-w-md
-                "
+                  "
                   >
                     <div
                       className="
@@ -145,11 +146,15 @@ const ProfileDrawer = ({ conversation, isOpen, onClose }: Props) => {
                         flex-1
                         px-4
                         sm:px-6
-                    "
+                      "
                       >
                         <div className="flex flex-col items-center">
                           <div className="mb-2">
-                            <Avatar user={otherUser} />
+                            {conversation.isGroup ? (
+                              <AvatarGroup users={conversation.users} />
+                            ) : (
+                              <Avatar user={otherUser} />
+                            )}
                           </div>
                           <div>{title}</div>
                           <div
@@ -213,16 +218,43 @@ const ProfileDrawer = ({ conversation, isOpen, onClose }: Props) => {
                             sm:px-6
                               "
                             >
+                              {conversation.isGroup && (
+                                <div>
+                                  <dt
+                                    className="
+                                      text-sm
+                                      font-medium
+                                      text-gray-500
+                                      sm:w-40
+                                      sm:flex-shrink-0
+                                    "
+                                  >
+                                    Emails
+                                  </dt>
+                                  <dd
+                                    className="
+                                      mt-1
+                                      text-sm
+                                      text-gray-900
+                                      sm:col-span-2
+                                    "
+                                  >
+                                    {conversation.users
+                                      .map((user) => user.email)
+                                      .join(", ")}
+                                  </dd>
+                                </div>
+                              )}
                               {!conversation.isGroup && (
                                 <div>
                                   <dt
                                     className="
-                                  text-sm
-                                  font-medium
-                                  text-gray-500
-                                  sm:w-40
-                                  sm:flex-shrink-0
-                                  "
+                                      text-sm
+                                      font-medium
+                                      text-gray-500
+                                      sm:w-40
+                                      sm:flex-shrink-0
+                                    "
                                   >
                                     Email
                                   </dt>
