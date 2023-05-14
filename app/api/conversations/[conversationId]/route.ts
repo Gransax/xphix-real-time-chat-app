@@ -2,6 +2,7 @@ import getCurrentUser from "@/app/actions/getCurrentUser";
 import { NextResponse } from "next/server";
 import prisma from "@/app/libs/prismaDB";
 import { useFieldArray } from "react-hook-form";
+import { pusherServer } from "@/app/libs/pusher";
 
 interface IParams {
   conversationId?: string;
@@ -18,8 +19,6 @@ export async function DELETE(
     }
 
     const { conversationId } = params;
-
-    console.log("conversation id : ", conversationId);
 
     const existingConversation = await prisma.conversation.findUnique({
       where: { id: conversationId },
@@ -39,9 +38,17 @@ export async function DELETE(
       },
     });
 
+    existingConversation.users.forEach((user) => {
+      if (user.email) {
+        pusherServer.trigger(
+          user.email,
+          "conversation:remove",
+          existingConversation
+        );
+      }
+    });
     return NextResponse.json(deletedConversation);
   } catch (error: any) {
-    console.log("DELETING_CONVERSATION_ERROR : ", error);
     return new NextResponse("Internal error!", { status: 500 });
   }
 }

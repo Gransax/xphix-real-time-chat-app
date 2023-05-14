@@ -3,14 +3,18 @@
 import { User } from "@prisma/client";
 import Image from "next/image";
 import React from "react";
+import useActiveList from "../hooks/useActiveList";
 
 type Props = {
   user?: User;
 };
 
 const Avatar = ({ user }: Props) => {
-  if (process.env.AVATAR_API && user?.name) {
-  }
+  // if (process.env.AVATAR_API && user?.name) {
+  // }
+
+  const { members } = useActiveList();
+  const isActive = members.indexOf(user?.email!) !== -1;
 
   const stringAvatar = user?.name
     ? `https://ui-avatars.com/api?name=${user?.name}&background=random&color=fff`
@@ -38,8 +42,9 @@ const Avatar = ({ user }: Props) => {
           fill
         />
       </div>
-      <span
-        className="
+      {isActive && (
+        <span
+          className="
           absolute
           block
           rounded-full
@@ -53,7 +58,8 @@ const Avatar = ({ user }: Props) => {
           md:h-3
           md:w-3
         "
-      />
+        />
+      )}
     </div>
   );
 };

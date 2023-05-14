@@ -9,6 +9,7 @@ import React, { Fragment, useMemo, useState } from "react";
 import { IoClose, IoTrash } from "react-icons/io5";
 import ConfirmModal from "./ConfirmModal";
 import AvatarGroup from "@/app/components/AvatarGroup";
+import useActiveList from "@/app/hooks/useActiveList";
 type Props = {
   conversation: Conversation & {
     users: User[];
@@ -30,12 +31,15 @@ const ProfileDrawer = ({ conversation, isOpen, onClose }: Props) => {
     return conversation.name || otherUser.name;
   }, [conversation.name, otherUser.name]);
 
+  const { members } = useActiveList();
+  const isActive = members.indexOf(otherUser?.email!) !== -1;
+
   const statusText = useMemo(() => {
     if (conversation.isGroup) {
       return `${conversation.users.length} members`;
     }
-    return "Active";
-  }, [conversation.isGroup, conversation.users.length]);
+    return isActive ? "Active" : "Offline";
+  }, [conversation, isActive]);
 
   return (
     <>
@@ -126,12 +130,12 @@ const ProfileDrawer = ({ conversation, isOpen, onClose }: Props) => {
                                 rounded-md
                                 bg-white
                                 text-gray-400
-                                hover:text-gray-500
-                                focus:outline-none
-                                focus:ring-2
-                                focus:ring-sky-500
-                                focus:ring-offset-2
-                             "
+                                hover:text-gray-500"
+                              // focus:outline-none
+                              // focus:ring-2
+                              // focus:ring-sky-500
+                              // focus:ring-offset-2
+                              // "
                             >
                               <span className="sr-only">Close panel</span>
                               <IoClose size={24} />
@@ -148,7 +152,7 @@ const ProfileDrawer = ({ conversation, isOpen, onClose }: Props) => {
                         sm:px-6
                       "
                       >
-                        <div className="flex flex-col items-center">
+                        <div className="flex flex-col items-center ">
                           <div className="mb-2">
                             {conversation.isGroup ? (
                               <AvatarGroup users={conversation.users} />

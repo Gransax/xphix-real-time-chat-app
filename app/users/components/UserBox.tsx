@@ -50,9 +50,9 @@ const UserBox = ({ user }: Props) => {
         <Avatar user={user} />
         <div
           className="
-        min-w-0
-        flex-1
-        "
+            min-w-0
+            flex-1
+          "
         >
           <div className="focus:outline-none">
             <div
